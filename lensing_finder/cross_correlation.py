@@ -1,13 +1,51 @@
 from scipy.integrate import simpson
+import numpy as np
 
 def cross_correlator(array1, array2, time, steps, midpoint=True, specific_time=None):
+    """
+    Computes the cross-correlation of two input arrays over specified time intervals.
+    
+    Parameters:
+    -----------
+    array1 : numpy.ndarray
+        First input array of time-series data.
+    array2 : numpy.ndarray
+        Second input array of time-series data.
+    time : numpy.ndarray
+        Time array corresponding to the data points.
+    steps : int
+        Number of segments to divide the data into for cross-correlation calculation.
+    midpoint : bool, optional (default=True)
+        If True, returns the midpoint of each time segment; otherwise, returns the last point of each segment.
+    specific_time : float, optional (default=None)
+        If provided, returns the cross-correlation value closest to this time.
+    
+    Returns:
+    --------
+    time_of_cross_corr : numpy.ndarray
+        Time values corresponding to the computed cross-correlation values.
+    data_cross_corr : numpy.ndarray
+        Computed cross-correlation values.
+    specific_value : float (optional)
+        If `specific_time` is given, returns the cross-correlation value at the closest matching time.
+    
+    Raises:
+    -------
+    ValueError:
+        If `array1` and `array2` have different lengths.
+    
+    Notes:
+    -------
+    - The function segments the input arrays into `steps` chunks and computes the cross-correlation in each.
+    - Uses Simpson's rule for numerical integration over each segment.
+    - If `specific_time` is provided, the function finds the closest available time and returns the corresponding value.
+    """
     N1 = int(len(array1))
     N2 = int(len(array2))
     s = int(steps)
     p = int(N1 / s)
     data_cross_corr = []
     
-
     if N1 != N2:
         raise ValueError("Input arrays must have the same length.")
     
